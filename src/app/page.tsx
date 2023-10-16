@@ -1,26 +1,26 @@
 import styles from './page.module.css'
-import { BLOG_CONTENT } from '@/app/assets/blog-content'
+// import { BLOG_CONTENT } from '@/app/assets/blog-content'
+import { getList } from '@/app/libs/microcms'
 import Link from 'next/link'
 
-type BlogContents = {
-	id: string
-	title: string
-	body: string
-	publishedAt: string
-}
+// type BlogContents = {
+// 	id: string
+// 	title: string
+// 	body: string
+// 	publishedAt: string
+// }
 
-export default function Home() {
-	const blogContents = listBlogContents()
+export default async function Home() {
+	const { contents } = await getList()
 
 	return (
 		<main className={styles.main}>
 			<h2>記事一覧ページ</h2>
-			{blogContents.map((blogContent) => (
+			{contents.map((blogContent) => (
 				<Link href={`/posts/${blogContent.id}`}>
 					<div key={blogContent.id}>
 						<h3>{blogContent.title}</h3>
 						<p>{blogContent.publishedAt}</p>
-						<p>{blogContent.body}</p>
 					</div>
 				</Link>
 			))}
@@ -28,7 +28,7 @@ export default function Home() {
 	)
 }
 
-const listBlogContents = () => {
-	const blogContents: BlogContents[] = BLOG_CONTENT
-	return blogContents
-}
+// const listBlogContents = () => {
+// 	const blogContents: BlogContents[] = BLOG_CONTENT
+// 	return blogContents
+// }
