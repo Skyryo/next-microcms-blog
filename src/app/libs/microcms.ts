@@ -1,16 +1,16 @@
 import { createClient } from 'microcms-js-sdk'
-import type {
-	MicroCMSQueries,
-	MicroCMSImage,
-	MicroCMSDate,
-} from 'microcms-js-sdk'
+import type { MicroCMSQueries, MicroCMSDate } from 'microcms-js-sdk'
 
 //blog 型定義
 export type Blog = {
 	id: string
 	title: string
 	content: string
-	eyecatch?: MicroCMSImage
+	eyecatch: {
+		url: string
+		height: number
+		width: number
+	}
 } & MicroCMSDate
 
 if (!process.env.MICROCMS_SERVICE_DOMAIN) {
