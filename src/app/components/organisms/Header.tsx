@@ -22,6 +22,7 @@ export default function Header() {
 					sx={{
 						backgroundColor: theme.palette.secondary,
 					}}
+					position='static'
 				>
 					<Toolbar>
 						<HamburgerMenu pages={pages} />
