@@ -11,6 +11,7 @@ export type Blog = {
 		height: number
 		width: number
 	}
+	priority: number
 } & MicroCMSDate
 
 if (!process.env.MICROCMS_SERVICE_DOMAIN) {
@@ -21,26 +22,47 @@ if (!process.env.MICROCMS_API_KEY) {
 }
 
 // microCMSのSDKを使ってクライアントを作成
-export const client = createClient({
+const client = createClient({
 	serviceDomain: process.env.MICROCMS_SERVICE_DOMAIN,
 	apiKey: process.env.MICROCMS_API_KEY,
 })
 
 //投稿一覧を取得
 export const getList = async (queries?: MicroCMSQueries) => {
-	const listData = await client.getList<Blog>({
+	const response = await client.getList({
+		customRequestInit: {
+			cache: 'no-store', // キャッシュを利用せずに常に新しいデータを取得する
+		},
 		endpoint: 'blogs',
 		queries,
 	})
-	return listData
+
+	return response.contents
 }
 
 //投稿を取得
-export const getPost = async (contentId: string, queries?: MicroCMSQueries) => {
+export const getListDetail = async (
+	contentId: string,
+	queries?: MicroCMSQueries
+) => {
 	const detailData = await client.getListDetail<Blog>({
 		endpoint: 'blogs',
 		contentId,
 		queries,
 	})
 	return detailData
+}
+
+//全てのIDを取得する
+export const getAllContentIds = async (fileters?: string) => {
+	const allContentsIds = await client.getAllContentIds({
+		endpoint: 'blogs',
+		filters: fileters,
+		customRequestInit: {
+			next: {
+				revalidate: 0,
+			},
+		},
+	})
+	return allContentsIds
 }
