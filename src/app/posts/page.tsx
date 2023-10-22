@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 export default async function AllPostPage() {
-	const { contents } = await getList()
+	const contents = await getList({ limit: 100 })
 
 	return (
 		<>
