@@ -1,41 +1,37 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# microCMSとNextjsを利用したヘッドレスCMSサイトの構築検証
 
-## Getting Started
+## 制作目的
+ヘッドレスCMSを用いたブログサイトを構築。以下の機能を実装できるか検証する。
+- 投稿したBlog記事の一覧ページが作成できる
+  - 一覧ページでは最大15コンテンツを表示し、ページネーションを実装する
+- 検索機能を実装する
+  - カテゴリ検索
+  - 地域検索
+  - フローワード検索
+- 複数のタグ付け
+- Stripeと連携し有料記事と無料記事を分ける
+  - 認証ページの実装
+  - 認証後は有料記事が閲覧できるようになる
+- コメント機能の実装
+- 閲覧数の多い人気記事が表示できるようにする
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## ディレクトリ構成
 ```
+src─┬─app─┬─api
+    │     ├─assets
+    │     ├─components
+    │     ├─libs
+    │     └─Posts─[id]
+    └styles
+```
+順次追加予定。
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 各フォルダ詳細
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-
-## 参考資料
-https://www.npmjs.com/package/microcms-js-sdk
-https://blog.microcms.io/nextjs13-microcms-rsc/
-
+- src : アプリ開発のソースコードを格納
+- app : NextjsのApp routerを使用するために必要
+- api : 自社開発APIを格納予定
+- assets:テストデータを格納
+- components : Atomic Designを採用。ページで使用するコンポーネントを格納
+- libs : 外部APIを呼び出すためのファイルを格納（※サービス名をファイル名またはフォルダ名に含める）
+- styles : 今んとこGlobal.cssのみを格納。基本的にはMUIのsxでスタイルを記述していきたい

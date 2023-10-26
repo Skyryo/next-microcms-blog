@@ -8,13 +8,6 @@ import Typography from '@mui/material/Typography'
 import { getAllContentIds, getListDetail } from '@/app/libs/microcms'
 import type { Blog } from '@/app/libs/microcms'
 
-const checkPriority = (posts: Blog[]) => {
-	const mostPriority = posts.filter((post) => post.priority === 1)
-	const restPriority = posts.filter((post) => post.priority !== 1)
-
-	return { mostPriority, restPriority }
-}
-
 export default async function Home() {
 	const priorityContents = await fetchFeaturedContents()
 	const { mostPriority, restPriority } = checkPriority(priorityContents)
@@ -109,8 +102,6 @@ export default async function Home() {
 
 const fetchFeaturedContents = async () => {
 	const featuredIds = await getAllContentIds('priority[exists]')
-	console.log('featuredIds', featuredIds)
-
 	const featuredContens = await Promise.all(
 		featuredIds.map((id) => {
 			return getListDetail(id)
@@ -118,4 +109,11 @@ const fetchFeaturedContents = async () => {
 	)
 
 	return featuredContens
+}
+
+const checkPriority = (posts: Blog[]) => {
+	const mostPriority = posts.filter((post) => post.priority === 1)
+	const restPriority = posts.filter((post) => post.priority !== 1)
+
+	return { mostPriority, restPriority }
 }
