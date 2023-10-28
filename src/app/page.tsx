@@ -1,5 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { cookies } from 'next/headers'
+
 import styles from './page.module.css'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
@@ -8,12 +10,22 @@ import Typography from '@mui/material/Typography'
 import { getAllContentIds, getListDetail } from '@/app/libs/microcms'
 import type { Blog } from '@/app/libs/microcms'
 
+import SearchInputField from '@/app/components/molecules/SearchInputForm'
+import SearchResult from '@/app/components/molecules/SearchResult'
+
 export default async function Home() {
 	const priorityContents = await fetchFeaturedContents()
 	const { mostPriority, restPriority } = checkPriority(priorityContents)
 
+	const cookieStore = cookies()
+	const searchWord = decodeURIComponent(
+		cookieStore.get('searchWord')?.value ?? ''
+	)
+
 	return (
 		<main className={styles.main}>
+			<SearchInputField />
+			<SearchResult searchWord={searchWord} />
 			<Container
 				maxWidth='lg'
 				sx={{ display: 'flex', justifyContent: 'space-between' }}
@@ -23,6 +35,7 @@ export default async function Home() {
 						width: '48%',
 						margin: '0 10',
 					}}
+					key={mostPriority[0].id}
 				>
 					<Link href={`/posts/${mostPriority[0].id}`}>
 						<Box
@@ -63,6 +76,7 @@ export default async function Home() {
 							sx={{
 								width: '48%',
 							}}
+							key={post.id}
 						>
 							<Link
 								key={post.priority}

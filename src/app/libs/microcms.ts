@@ -34,7 +34,10 @@ export const getList = async (queries?: MicroCMSQueries) => {
 			cache: 'no-store', // キャッシュを利用せずに常に新しいデータを取得する
 		},
 		endpoint: 'blogs',
-		queries,
+		queries: {
+			...queries,
+			fields: 'id,title,eyecatch,priority,publishedAt',
+		},
 	})
 
 	return response.contents
@@ -65,4 +68,20 @@ export const getAllContentIds = async (fileters?: string) => {
 		},
 	})
 	return allContentsIds
+}
+
+//全文検索用API
+export const getSearchedContents = async (queries?: MicroCMSQueries) => {
+	const response = await client.getList({
+		customRequestInit: {
+			cache: 'no-store', // キャッシュを利用せずに常に新しいデータを取得する
+		},
+		endpoint: 'blogs',
+		queries: {
+			...queries,
+			fields: 'id,title,eyecatch,publishedAt',
+		},
+	})
+
+	return response.contents
 }
