@@ -1,3 +1,12 @@
 body {
   margin-top: 64px;
 }
+
+div figure {
+  margin: 0 !important;
+}
+
+div figure img {
+  width: 100% !important;
+  height: auto !important;
+}

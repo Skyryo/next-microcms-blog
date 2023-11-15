@@ -1,29 +1,34 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { cookies } from 'next/headers'
+
 import styles from './page.module.css'
 import Box from '@mui/material/Box'
-import Container from '@mui/material/Container'
-import Typography from '@mui/material/Typography'
+// import Container from '@mui/material/Container'
+// import Typography from '@mui/material/Typography'
+import Grid from '@mui/material/Grid'
 
 import { getAllContentIds, getListDetail } from '@/app/libs/microcms'
 import type { Blog } from '@/app/libs/microcms'
+
+import SearchInputField from '@/app/components/molecules/SearchInputForm'
+import SearchResult from '@/app/components/molecules/SearchResult'
 
 export default async function Home() {
 	const priorityContents = await fetchFeaturedContents()
 	const { mostPriority, restPriority } = checkPriority(priorityContents)
 
+	const cookieStore = cookies()
+	const searchWord = decodeURIComponent(
+		cookieStore.get('searchWord')?.value ?? ''
+	)
+
 	return (
 		<main className={styles.main}>
-			<Container
-				maxWidth='lg'
-				sx={{ display: 'flex', justifyContent: 'space-between' }}
-			>
-				<Box
-					sx={{
-						width: '48%',
-						margin: '0 10',
-					}}
-				>
+			<SearchInputField />
+			{searchWord ? <SearchResult searchWord={searchWord} /> : ''}
+			<Grid container spacing={2}>
+				<Grid item xs={12} md={6} key={mostPriority[0].id}>
 					<Link href={`/posts/${mostPriority[0].id}`}>
 						<Box
 							sx={{
@@ -49,53 +54,37 @@ export default async function Home() {
 						<h3>{mostPriority[0].title}</h3>
 						<p>{mostPriority[0].publishedAt}</p>
 					</Link>
-				</Box>
-				<Box
-					sx={{
-						width: '48%',
-						display: 'flex',
-						justifyContent: 'space-between',
-						flexWrap: 'wrap',
-					}}
-				>
-					{restPriority.map((post) => (
-						<Box
-							sx={{
-								width: '48%',
-							}}
-						>
-							<Link
-								key={post.priority}
-								href={`/posts/${post.id}`}
+				</Grid>
+				{restPriority.map((post) => (
+					<Grid item xs={12} md={6} key={post.id}>
+						<Link href={`/posts/${post.id}`}>
+							<Box
+								sx={{
+									width: '100%',
+									height: '180px',
+									position: 'relative',
+								}}
 							>
-								<Box
-									sx={{
-										width: '100%',
-										height: '180px',
-										position: 'relative',
-									}}
-								>
-									{post.eyecatch ? (
-										<Image
-											src={post.eyecatch.url}
-											// width={100}
-											// height={200}
-											alt={'アイキャッチ画像'}
-											priority={true}
-											quality={10}
-											fill={true}
-										/>
-									) : (
-										<></>
-									)}
-								</Box>
-								<h3>{post.title}</h3>
-								<p>{post.publishedAt}</p>
-							</Link>
-						</Box>
-					))}
-				</Box>
-			</Container>
+								{post.eyecatch ? (
+									<Image
+										src={post.eyecatch.url}
+										// width={100}
+										// height={200}
+										alt={'アイキャッチ画像'}
+										priority={true}
+										quality={10}
+										fill={true}
+									/>
+								) : (
+									<></>
+								)}
+							</Box>
+							<h3>{post.title}</h3>
+							<p>{post.publishedAt}</p>
+						</Link>
+					</Grid>
+				))}
+			</Grid>
 		</main>
 	)
 }
